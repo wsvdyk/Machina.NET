@@ -34,6 +34,18 @@ namespace Machina.Drivers.Communication.Protocols
         internal const int INST_EXT_JOINTS_JOINTTARGET = 16;    // (setextjoints a1 a2 a3 a4 a5 a6, applies only to robtarget)
         internal const int INST_CUSTOM_ACTION = 17;             // This is a wildcard for custom user functions that do not really fit in the Machina API (mainly Yumi gripping right now)
 
+
+        //  ███╗   ███╗██╗   ██╗     ██████╗ ██╗    ██╗███╗   ██╗
+        //  ████╗ ████║╚██╗ ██╔╝    ██╔═══██╗██║    ██║████╗  ██║
+        //  ██╔████╔██║ ╚████╔╝     ██║   ██║██║ █╗ ██║██╔██╗ ██║
+        //  ██║╚██╔╝██║  ╚██╔╝      ██║   ██║██║███╗██║██║╚██╗██║
+        //  ██║ ╚═╝ ██║   ██║       ╚██████╔╝╚███╔███╔╝██║ ╚████║
+        //  ╚═╝     ╚═╝   ╚═╝        ╚═════╝  ╚══╝╚══╝ ╚═╝  ╚═══╝
+
+        internal const int INST_TEST1 = 18;
+        internal const int INST_TEST2 = 19;
+
+
         internal const int RES_VERSION = 20;                    // ">20 1 2 1;" Sends version numbers
         internal const int RES_POSE = 21;                       // ">21 400 300 500 0 0 1 0;"
         internal const int RES_JOINTS = 22;                     // ">22 0 0 0 0 90 0;"
@@ -62,6 +74,41 @@ namespace Machina.Drivers.Communication.Protocols
 
             switch (action.Type)
             {
+
+
+                //  ███╗   ███╗██╗   ██╗     ██████╗ ██╗    ██╗███╗   ██╗
+                //  ████╗ ████║╚██╗ ██╔╝    ██╔═══██╗██║    ██║████╗  ██║
+                //  ██╔████╔██║ ╚████╔╝     ██║   ██║██║ █╗ ██║██╔██╗ ██║
+                //  ██║╚██╔╝██║  ╚██╔╝      ██║   ██║██║███╗██║██║╚██╗██║
+                //  ██║ ╚═╝ ██║   ██║       ╚██████╔╝╚███╔███╔╝██║ ╚████║
+                //  ╚═╝     ╚═╝   ╚═╝        ╚═════╝  ╚══╝╚══╝ ╚═╝  ╚═══╝
+
+                case ActionType.Test1:
+                    msgs.Add(string.Format(CultureInfo.InvariantCulture,
+                        "{0}{1} {2}{3}", 
+                        STR_MESSAGE_ID_CHAR,
+                        action.Id,
+                        INST_TEST1,
+                        STR_MESSAGE_END_CHAR));
+                    break;
+                case ActionType.Test2:
+                    msgs.Add(string.Format(CultureInfo.InvariantCulture,
+                        "{0}{1} {2}{3}",
+                        STR_MESSAGE_ID_CHAR,
+                        action.Id,
+                        INST_TEST2,
+                        STR_MESSAGE_END_CHAR));
+                    break;
+
+
+                //  ███████╗██╗  ██╗██╗███████╗████████╗██╗███╗   ██╗ ██████╗ 
+                //  ██╔════╝╚██╗██╔╝██║██╔════╝╚══██╔══╝██║████╗  ██║██╔════╝ 
+                //  █████╗   ╚███╔╝ ██║███████╗   ██║   ██║██╔██╗ ██║██║  ███╗
+                //  ██╔══╝   ██╔██╗ ██║╚════██║   ██║   ██║██║╚██╗██║██║   ██║
+                //  ███████╗██╔╝ ██╗██║███████║   ██║   ██║██║ ╚████║╚██████╔╝
+                //  ╚══════╝╚═╝  ╚═╝╚═╝╚══════╝   ╚═╝   ╚═╝╚═╝  ╚═══╝ ╚═════╝ 
+
+
                 case ActionType.Translation:
                 case ActionType.Rotation:
                 case ActionType.Transformation:

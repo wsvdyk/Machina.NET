@@ -1,4 +1,4 @@
-MODULE Machina_Driver
+﻿MODULE Machina_Driver
 
     ! ###\   ###\ #####\  ######\##\  ##\##\###\   ##\ #####\
     ! ####\ ####\##\\\##\##\\\\\\##\  ##\##\####\  ##\##\\\##\
@@ -90,7 +90,17 @@ MODULE Machina_Driver
     CONST num INST_SING_AREA := 14;                 ! SingArea ON (ON = 0 sets SingArea \Off, any other value sets SingArea \Wrist)
     CONST num INST_EXT_JOINTS_ROBTARGET := 15;      ! (setextjoints a1 a2 a3 a4 a5 a6, applies only to robtarget)
     CONST num INST_EXT_JOINTS_JOINTTARGET := 16;    ! (setextjoints a1 a2 a3 a4 a5 a6, applies only to robtarget)
-    CONST num INST_CUSTOM_ACTION := 17;             ! This is a wildcard for custom user functions that do not really fit in the Machina API (mainly Yumi gripping right now)
+    CONST num INST_CUSTOM_ACTION := 17;             ! This is a wildcard for custom user functions that do not really fit in the Machina API (mainly Yumi gripping right now)\
+
+	!###\   ###\###\    ###\     ######\ ##\	 ##\###\   ##\
+	!####\ ####\ ###\  ###\     ##\\\\##\##\\##\\##\####\  ##\
+	!##\####\##\  ###\###\      ##\   ##\##\####\##\##\##\ ##\
+	!##\\##\\##\    ###\        ##\   ##\####\ ####\##\\##\##\
+	!##\ \\\ ##\    ###\        \######\ ###\   ###\##\ \####\
+	!\\\     \\\	\\\\         \\\\\\\ \\\\   \\\\\\\  \\\\\
+	
+	CONST num INST_TEST1 := 18;
+	CONST num INST_TEST2 := 19;
 
     CONST num INST_STOP_EXECUTION := 100;           ! Stops execution of the server module
     CONST num INST_GET_INFO := 101;                 ! A way to retreive state information from the server (not implemented)
@@ -172,7 +182,20 @@ MODULE Machina_Driver
     PERS num monitorUpdateInterval;                 ! Wait time in secs before next update. Is global variable so that it can be changed from Driver.
     PERS bool isMachinaDriverAvailable := TRUE;     ! Let the monitor know that the main task is running a valid Machina driver.
 
-
+	CONST robtarget Target_10	:=[[252,199,33],[0.717393288,-0.000000065,0.696668408,0.000000101],[0,0,-1,1],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
+	CONST robtarget Target_20	:=[[252,199,4],[0.717393291,-0.000000001,0.696668405,0.000000116],[0,0,-1,1],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
+	CONST robtarget Target_30	:=[[252,199,33],[0.717393288,-0.000000065,0.696668408,0.000000101],[0,0,-1,1],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
+	CONST robtarget Target_40	:=[[390,199,33],[0.717393267,-0.000000037,0.696668429,0.000000068],[0,0,-1,1],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
+	CONST robtarget Target_50	:=[[390,199,22],[0.717393294,-0.00000005,0.696668402,0.000000098],[0,0,-1,1],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
+	CONST robtarget Target_60	:=[[390,199,51],[0.717393375,-0.000000041,0.696668318,0.000000105],[0,0,-1,1],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
+	
+	CONST robtarget Target_70	:=[[397,130,10],[0.021846698,-0.696460684,0.71726232,-0.000047745],[0,0,-1,0],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
+	CONST robtarget Target_80	:=[[393,124,-24],[0.004197004,-0.705615511,0.708570986,0.004036577],[0,0,-1,0],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
+	CONST robtarget Target_90	:=[[393,203,-24],[0.004197008,-0.705615485,0.708571012,0.004036576],[0,0,-1,0],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
+	CONST robtarget Target_100	:=[[393,203,-3],[0.004197042,-0.705615516,0.708570981,0.004036565],[0,0,-1,0],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
+	CONST robtarget Target_110	:=[[355,-303,-4],[0.002551732,0.705572185,0.708626711,0.003092848],[-1,0,0,0],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
+	CONST robtarget Target_120	:=[[355,-303,-24],[0.002551735,0.705572183,0.708626713,0.00309285],[-1,0,0,0],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget Target_130	:=[[355,-208,-24],[0.002551719,0.705572218,0.708626678,0.003092837],[-1,0,0,0],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
 
     !
     !  |\/| /\ ||\ |
@@ -202,11 +225,11 @@ MODULE Machina_Driver
         WHILE stopExecution = FALSE DO
             ! Read the incoming buffer stream until flagges complete
             ! (must be done this way to avoid execution stack overflow through recursion)
-            ReadStream;
-            WHILE streamBufferPending = TRUE DO
-                ReadStream;
-            ENDWHILE
-            ParseStream;
+			ReadStream;
+			WHILE streamBufferPending = TRUE DO
+				ReadStream;
+			ENDWHILE
+			ParseStream;
 
             ! Once the stream is flushed, execute all pending actions
             WHILE stopExecution = FALSE AND (actionPosExecute < actionPosWrite OR isActionPosWriteWrapped = TRUE) DO
@@ -288,10 +311,38 @@ MODULE Machina_Driver
 
                 CASE INST_CUSTOM_ACTION:
                     CustomAction currentAction;
+
+				!###\   ###\###\    ###\     ######\ ##\	 ##\###\   ##\
+				!####\ ####\ ###\  ###\     ##\\\\##\##\\##\\##\####\  ##\
+				!##\####\##\  ###\###\      ##\   ##\##\####\##\##\##\ ##\
+				!##\\##\\##\    ###\        ##\   ##\####\ ####\##\\##\##\
+				!##\ \\\ ##\    ###\        \######\ ###\   ###\##\ \####\
+				!\\\     \\\	\\\\         \\\\\\\ \\\\   \\\\\\\  \\\\\
+
+				CASE INST_TEST1:
+					MoveJ Target_10,  cursorSpeed, cursorZone, cursorTool, \WObj:=cursorWObj;
+					MoveL Target_20,  cursorSpeed, cursorZone, cursorTool, \WObj:=cursorWObj;
+					WaitTime \InPos,0.1;
+					MoveL Target_30,  cursorSpeed, cursorZone, cursorTool, \WObj:=cursorWObj;
+					MoveL Target_40,  cursorSpeed, cursorZone, cursorTool, \WObj:=cursorWObj;
+					MoveL Target_50,  cursorSpeed, cursorZone, cursorTool, \WObj:=cursorWObj;
+					WaitTime \InPos,0.1;
+					MoveL Target_60,  cursorSpeed, cursorZone, cursorTool, \WObj:=cursorWObj;
+
+				CASE INST_TEST2:
+					MoveJ Target_70,  cursorSpeed, cursorZone, cursorTool, \WObj:=cursorWObj;
+					MoveL Target_80,  cursorSpeed, cursorZone, cursorTool, \WObj:=cursorWObj;
+					MoveL Target_90,  cursorSpeed, cursorZone, cursorTool, \WObj:=cursorWObj;
+					WaitTime \InPos,0.1;
+					MoveL Target_100, cursorSpeed, cursorZone, cursorTool, \WObj:=cursorWObj;
+					MoveL Target_110, cursorSpeed, cursorZone, cursorTool, \WObj:=cursorWObj;
+					MoveL Target_120, cursorSpeed, cursorZone, cursorTool, \WObj:=cursorWObj;
+					MoveL Target_130, cursorSpeed, cursorZone, cursorTool, \WObj:=cursorWObj;
+					
                 ENDTEST
 
                 ! Send acknowledgement message
-                SendAcknowledgement(currentAction);
+				SendAcknowledgement(currentAction);
 
                 !! Update the client with real-time motion data
                 !SendPose;
@@ -519,10 +570,10 @@ MODULE Machina_Driver
 
     ! Read string buffer from the client and try to parse it
     PROC ReadStream()
-        VAR string strBuffer;
-        VAR num strBufferLength;
-        SocketReceive clientSocket \Str:=strBuffer \NoRecBytes:=strBufferLength \Time:=WAIT_MAX;
-        ParseBuffer strBuffer, strBufferLength;
+		VAR string strBuffer;
+		var num strBufferLength;
+		SocketReceive clientSocket \Str:=strBuffer \NoRecBytes:=strBufferLength \Time:=WAIT_MAX;
+		ParseBuffer strBuffer, strBufferLength;
 
         ERROR
         IF ERRNO = ERR_SOCK_CLOSED THEN

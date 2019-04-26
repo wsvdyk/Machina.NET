@@ -31,6 +31,7 @@ namespace EXAMPLE_ConnectionCheck
             Robot arm = Robot.Create("ConnectionTest", "ABB");
 
             // Dumps all Log messages to the Console.
+			// remove this line or set the boolean to fasle if you do not need the information
             arm.DebugMode(true);
 
             // Set connection mode to "online"
@@ -42,7 +43,8 @@ namespace EXAMPLE_ConnectionCheck
             // Let Machina try to connect to a robot on the network
             arm.Connect();
 
-            // At this point, a lot of information about the robot should be displayed on the console. 
+            // At this point, a lot of information about the robot should be displayed on the console.
+			// if you want to build upon this code add that here, make sure you add a exit option, if you fail to do so issues with the robot can appear!
 
             Console.WriteLine(" ");
             Console.WriteLine("Press any key to DISCONNECT...");

@@ -452,7 +452,9 @@ namespace Machina
             { typeof (ActionInitialization),            (act, robCur) => robCur.ApplyAction((ActionInitialization) act) },
             { typeof (ActionExternalAxis),              (act, robCur) => robCur.ApplyAction((ActionExternalAxis) act) },
             { typeof (ActionCustomCode),                (act, robCur) => robCur.ApplyAction((ActionCustomCode) act) },
-            { typeof (ActionArmAngle),                  (act, robCur) => robCur.ApplyAction((ActionArmAngle) act) }
+            { typeof (ActionArmAngle),                  (act, robCur) => robCur.ApplyAction((ActionArmAngle) act) },
+            { typeof (ActionTest1),                     (act, robCur) => robCur.ApplyAction((ActionTest1) act)},
+            { typeof (ActionTest2),                     (act, robCur) => robCur.ApplyAction((ActionTest2) act)},
         };
 
         /// <summary>
@@ -486,6 +488,7 @@ namespace Machina
         /// </summary>
         /// <param name="action"></param>
         /// <returns></returns>
+
         public bool ApplyAction(ActionAcceleration action)
         {
             if (action.relative)
@@ -604,6 +607,40 @@ namespace Machina
         //  ╔╦╗╔═╗╔╦╗╦╔═╗╔╗╔  ╔═╗╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
         //  ║║║║ ║ ║ ║║ ║║║║  ╠═╣║   ║ ║║ ║║║║╚═╗
         //  ╩ ╩╚═╝ ╩ ╩╚═╝╝╚╝  ╩ ╩╚═╝ ╩ ╩╚═╝╝╚╝╚═╝
+
+
+        //  ███╗   ███╗██╗   ██╗     ██████╗ ██╗    ██╗███╗   ██╗
+        //  ████╗ ████║╚██╗ ██╔╝    ██╔═══██╗██║    ██║████╗  ██║
+        //  ██╔████╔██║ ╚████╔╝     ██║   ██║██║ █╗ ██║██╔██╗ ██║
+        //  ██║╚██╔╝██║  ╚██╔╝      ██║   ██║██║███╗██║██║╚██╗██║
+        //  ██║ ╚═╝ ██║   ██║       ╚██████╔╝╚███╔███╔╝██║ ╚████║
+        //  ╚═╝     ╚═╝   ╚═╝        ╚═════╝  ╚══╝╚══╝ ╚═╝  ╚═══╝
+
+        /// <summary>
+        /// Apply test1 Action.
+        /// This function always returns true. If parameters are given with
+        /// action they should be used here before returning true.
+        /// </summary>
+        /// <param name="action"></param>
+        /// <returns></returns>
+        public bool ApplyAction(ActionTest1 action) => true;
+
+        /// <summary>
+        /// Apply test2 Action
+        /// function always returned true, no algorithm needed as
+        /// no parameters are given to ActionTest2.
+        /// </summary>
+        /// <param name="action"></param>
+        /// <returns></returns>
+        public bool ApplyAction(ActionTest2 action) => true;
+
+        //  ███████╗██╗  ██╗██╗███████╗████████╗██╗███╗   ██╗ ██████╗ 
+        //  ██╔════╝╚██╗██╔╝██║██╔════╝╚══██╔══╝██║████╗  ██║██╔════╝ 
+        //  █████╗   ╚███╔╝ ██║███████╗   ██║   ██║██╔██╗ ██║██║  ███╗
+        //  ██╔══╝   ██╔██╗ ██║╚════██║   ██║   ██║██║╚██╗██║██║   ██║
+        //  ███████╗██╔╝ ██╗██║███████║   ██║   ██║██║ ╚████║╚██████╔╝
+        //  ╚══════╝╚═╝  ╚═╝╚═╝╚══════╝   ╚═╝   ╚═╝╚═╝  ╚═══╝ ╚═════╝ 
+
         /// <summary>
         /// Apply Translation Action.
         /// </summary>

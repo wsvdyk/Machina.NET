@@ -163,6 +163,9 @@ namespace Machina.Utilities
                 return str;
 
             string s = str;
+            // Why did I had this in a try catch?
+            //try
+            //{
             while (s[0] == rem)
             {
                 s = s.Remove(0, 1);
@@ -172,6 +175,13 @@ namespace Machina.Utilities
             {
                 s = s.Remove(s.Length - 1);
             }
+            //}
+            //catch (Exception ex)
+            //{
+                //Logger.Warning($"{ex}");
+            //}
+
+            
 
             return s;
         }

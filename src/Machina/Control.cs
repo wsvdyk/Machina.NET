@@ -692,11 +692,6 @@ namespace Machina
             throw new NotImplementedException();
         }
 
-
-
-
-
-
         //   █████╗  ██████╗████████╗██╗ ██████╗ ███╗   ██╗███████╗
         //  ██╔══██╗██╔════╝╚══██╔══╝██║██╔═══██╗████╗  ██║██╔════╝
         //  ███████║██║        ██║   ██║██║   ██║██╔██╗ ██║███████╗
@@ -725,10 +720,25 @@ namespace Machina
             return success;
         }
 
+        //  ███╗   ███╗██╗   ██╗     ██████╗ ██╗    ██╗███╗   ██╗    
+        //  ████╗ ████║╚██╗ ██╔╝    ██╔═══██╗██║    ██║████╗  ██║    
+        //  ██╔████╔██║ ╚████╔╝     ██║   ██║██║ █╗ ██║██╔██╗ ██║    
+        //  ██║╚██╔╝██║  ╚██╔╝      ██║   ██║██║███╗██║██║╚██╗██║    
+        //  ██║ ╚═╝ ██║   ██║       ╚██████╔╝╚███╔███╔╝██║ ╚████║    
+        //  ╚═╝     ╚═╝   ╚═╝        ╚═════╝  ╚══╝╚══╝ ╚═╝  ╚═══╝   
 
+        public bool IssueTest1Request(bool relative) =>
+            IssueApplyActionRequest(new ActionTest1(relative));
 
-
-
+        public bool IssueTest2Request(bool relative) =>
+            IssueApplyActionRequest(new ActionTest2(relative));
+            
+        //  ███████╗██╗  ██╗██╗███████╗████████╗██╗███╗   ██╗ ██████╗ 
+        //  ██╔════╝╚██╗██╔╝██║██╔════╝╚══██╔══╝██║████╗  ██║██╔════╝ 
+        //  █████╗   ╚███╔╝ ██║███████╗   ██║   ██║██╔██╗ ██║██║  ███╗
+        //  ██╔══╝   ██╔██╗ ██║╚════██║   ██║   ██║██║╚██╗██║██║   ██║
+        //  ███████╗██╔╝ ██╗██║███████║   ██║   ██║██║ ╚████║╚██████╔╝
+        //  ╚══════╝╚═╝  ╚═╝╚═╝╚══════╝   ╚═╝   ╚═╝╚═╝  ╚═══╝ ╚═════╝   
         public bool IssueSpeedRequest(double speed, bool relative) => 
                 IssueApplyActionRequest(new ActionSpeed(speed, relative));
 
