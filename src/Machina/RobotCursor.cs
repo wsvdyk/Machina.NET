@@ -926,6 +926,10 @@ namespace Machina
                 logger.Verbose("Axes at " + this.axes);
             }
 
+            // set geometric data back. Issue fixed when attachtool is done after axesto()?
+            position = prevPosition;
+            rotation = prevRotation;
+
             return true;
         }
 
