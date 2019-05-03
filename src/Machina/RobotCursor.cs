@@ -623,7 +623,16 @@ namespace Machina
         /// </summary>
         /// <param name="action"></param>
         /// <returns></returns>
-        public bool ApplyAction(ActionTest1 action) => true;
+        public bool ApplyAction(ActionTest1 action)
+        {
+            // Flag the lack of other geometric data
+            prevPosition = position;
+            position = null;
+            prevRotation = rotation;
+            rotation = null;
+
+            return true;
+        }
 
         /// <summary>
         /// Apply test2 Action
@@ -632,7 +641,16 @@ namespace Machina
         /// </summary>
         /// <param name="action"></param>
         /// <returns></returns>
-        public bool ApplyAction(ActionTest2 action) => true;
+        public bool ApplyAction(ActionTest2 action)
+        {
+            // Flag the lack of other geometric data
+            prevPosition = position;
+            position = null;
+            prevRotation = rotation;
+            rotation = null;
+
+            return true;
+        }
 
         //  ███████╗██╗  ██╗██╗███████╗████████╗██╗███╗   ██╗ ██████╗ 
         //  ██╔════╝╚██╗██╔╝██║██╔════╝╚══██╔══╝██║████╗  ██║██╔════╝ 
@@ -925,10 +943,6 @@ namespace Machina
             {
                 logger.Verbose("Axes at " + this.axes);
             }
-
-            // set geometric data back. Issue fixed when attachtool is done after axesto()?
-            position = prevPosition;
-            rotation = prevRotation;
 
             return true;
         }
