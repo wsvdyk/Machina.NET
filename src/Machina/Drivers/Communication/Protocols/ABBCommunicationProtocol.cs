@@ -44,6 +44,8 @@ namespace Machina.Drivers.Communication.Protocols
 
         internal const int INST_TEST1 = 18;
         internal const int INST_TEST2 = 19;
+        internal const int INST_MOVETOCOMPLETEL = 20;
+        internal const int INST_MOVETOCOMPLETEJ = 21;
 
 
         internal const int RES_VERSION = 20;                    // ">20 1 2 1;" Sends version numbers
@@ -97,6 +99,19 @@ namespace Machina.Drivers.Communication.Protocols
                         STR_MESSAGE_ID_CHAR,
                         action.Id,
                         INST_TEST2,
+                        STR_MESSAGE_END_CHAR));
+                    break;
+                case ActionType.MoveToRobTarget:
+                    msgs.Add(string.Format(CultureInfo.InvariantCulture, 
+                        "{0}{1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12} {13}{14}",
+                        STR_MESSAGE_ID_CHAR,
+                        action.Id,
+                        cursor.motionType == MotionType.Linear ? INST_MOVETOCOMPLETEL : INST_MOVETOCOMPLETEJ,
+                        Math.Round(cursor.position.X, Geometry.STRING_ROUND_DECIMALS_MM),
+                        Math.Round(cursor.position.Y, Geometry.STRING_ROUND_DECIMALS_MM),
+                        Math.Round(cursor.position.Z, Geometry.STRING_ROUND_DECIMALS_MM),
+                        cursor.q[0], cursor.q[1], cursor.q[2], cursor.q[3],
+                        cursor.cf[0], cursor.cf[1], cursor.cf[2], cursor.cf[3],
                         STR_MESSAGE_END_CHAR));
                     break;
 

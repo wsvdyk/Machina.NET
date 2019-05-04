@@ -727,12 +727,31 @@ namespace Machina
         //  ██║ ╚═╝ ██║   ██║       ╚██████╔╝╚███╔███╔╝██║ ╚████║    
         //  ╚═╝     ╚═╝   ╚═╝        ╚═════╝  ╚══╝╚══╝ ╚═╝  ╚═══╝   
 
+        /// <summary>
+        /// Issue a test1 action request with robtargets in RAPID code
+        /// </summary>
+        /// <param name="relative"></param>
+        /// <returns></returns>
         public bool IssueTest1Request(bool relative) =>
             IssueApplyActionRequest(new ActionTest1(relative));
 
+        /// <summary>
+        /// Issue a test2 action request with robtargets in RAPID code
+        /// </summary>
+        /// <param name="relative"></param>
+        /// <returns></returns>
         public bool IssueTest2Request(bool relative) =>
             IssueApplyActionRequest(new ActionTest2(relative));
-            
+
+        /// <summary>
+        /// Issue a complete move action request that uses new settings.
+        /// </summary>
+        /// <param name="trans"></param>
+        /// <param name="relative"></param>
+        /// <returns></returns>
+        public bool IssueMoveToRobTargetRequest(Vector trans, double q1, double q2, double q3, double q4, double cf1, double cf2, double cf3, double cf4, bool relative) =>
+            IssueApplyActionRequest(new ActionMoveToRobTarget(trans, q1, q2, q3, q4, cf1, cf2, cf3, cf4, relative));
+
         //  ███████╗██╗  ██╗██╗███████╗████████╗██╗███╗   ██╗ ██████╗ 
         //  ██╔════╝╚██╗██╔╝██║██╔════╝╚══██╔══╝██║████╗  ██║██╔════╝ 
         //  █████╗   ╚███╔╝ ██║███████╗   ██║   ██║██╔██╗ ██║██║  ███╗

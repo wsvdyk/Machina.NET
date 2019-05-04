@@ -49,6 +49,7 @@ namespace Machina
         //  ╚═╝     ╚═╝   ╚═╝        ╚═════╝  ╚══╝╚══╝ ╚═╝  ╚═══╝
         Test1,
         Test2,
+        MoveToRobTarget,
     }
 
     

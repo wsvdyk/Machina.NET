@@ -91,6 +91,7 @@
     <Compile Include="Actions\ActionIODigital.cs" />
     <Compile Include="Actions\ActionMessage.cs" />
     <Compile Include="Actions\ActionMotion.cs" />
+    <Compile Include="Actions\ActionMoveToRobTarget.cs" />
     <Compile Include="Actions\ActionPrecision.cs" />
     <Compile Include="Actions\ActionPushPop.cs" />
     <Compile Include="Actions\ActionRotation.cs" />

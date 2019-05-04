@@ -101,6 +101,8 @@
 	
 	CONST num INST_TEST1 := 18;
 	CONST num INST_TEST2 := 19;
+	CONST num INST_MOVETOCOMPLETEL := 20;
+	CONST num INST_MOVETOCOMPLETEJ := 21;
 
     CONST num INST_STOP_EXECUTION := 100;           ! Stops execution of the server module
     CONST num INST_GET_INFO := 101;                 ! A way to retreive state information from the server (not implemented)
@@ -338,6 +340,14 @@
 					MoveL Target_110, cursorSpeed, cursorZone, cursorTool, \WObj:=cursorWObj;
 					MoveL Target_120, cursorSpeed, cursorZone, cursorTool, \WObj:=cursorWObj;
 					MoveL Target_130, cursorSpeed, cursorZone, cursorTool, \WObj:=cursorWObj;
+				
+				CASE INST_MOVETOCOMPLETEL:
+					cursorRobTarget := GetRobTargetComplete(currentAction);
+					MoveL cursorRobTarget, cursorSpeed, cursorZone, cursorTool, \WObj:=cursorWObj;
+
+				CASE INST_MOVETOCOMPLETEJ:
+					cursorRobTarget := getRobTargetComplete(currentAction);
+					MoveJ cursorRobTarget, cursorSpeed, cursorZone, cursorTool, \WObj:=cursorWObj;
 					
                 ENDTEST
 
@@ -991,6 +1001,10 @@
     ! Return the robottarget represented by an Action
     FUNC robtarget GetRobTarget(action a)
         RETURN [[a.p1, a.p2, a.p3], [a.p4, a.p5, a.p6, a.p7], [0, 0, 0, 0], cursorExtJointsRobTarget];
+    ENDFUNC
+
+	FUNC robtarget GetRobTargetComplete(action a)
+        RETURN [[a.p1, a.p2, a.p3], [a.p4, a.p5, a.p6, a.p7], [a.p8, a.p9, a.p10, a.p11], cursorExtJointsRobTarget];
     ENDFUNC
 
     ! Return the speeddata represented by an Action

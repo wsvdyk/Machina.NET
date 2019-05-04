@@ -42,6 +42,10 @@ namespace Machina
         public ReferenceCS referenceCS;
         public Tool tool;
 
+        public double[] q  = new double[4];
+        public double[] cf = new double[4];
+
+
         // Because of YuMi, now we are keeping track of two sets of external axes! @TODO: make this less ABB-centric somehow?
         public ExternalAxes externalAxesCartesian;
         public ExternalAxes externalAxesJoints;
@@ -455,6 +459,7 @@ namespace Machina
             { typeof (ActionArmAngle),                  (act, robCur) => robCur.ApplyAction((ActionArmAngle) act) },
             { typeof (ActionTest1),                     (act, robCur) => robCur.ApplyAction((ActionTest1) act)},
             { typeof (ActionTest2),                     (act, robCur) => robCur.ApplyAction((ActionTest2) act)},
+            { typeof (ActionMoveToRobTarget),           (act, robCur) => robCur.ApplyAction((ActionMoveToRobTarget) act)},
         };
 
         /// <summary>
@@ -648,6 +653,29 @@ namespace Machina
             position = null;
             prevRotation = rotation;
             rotation = null;
+
+            return true;
+        }
+
+        public bool ApplyAction(ActionMoveToRobTarget action)
+        {
+            Vector newPosition = new Vector();
+
+            newPosition.Set(action.translation);
+
+            prevPosition = position;
+            position = newPosition;
+
+            prevRotation = rotation;  // to flag same-orientation change
+
+            prevAxes = axes;
+            axes = null;      // flag joints as null to avoid Joint instructions using obsolete data
+
+            for (int i = 0; i < 4; i++)
+            {
+                this.q[i]  = action.q[i];
+                this.cf[i] = action.cf[i];
+            }
 
             return true;
         }

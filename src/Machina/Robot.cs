@@ -343,14 +343,60 @@ namespace Machina
         //  ██║ ╚═╝ ██║   ██║       ╚██████╔╝╚███╔███╔╝██║ ╚████║    
         //  ╚═╝     ╚═╝   ╚═╝        ╚═════╝  ╚══╝╚══╝ ╚═╝  ╚═══╝    
 
+        /// <summary>
+        /// Test action1
+        /// </summary>
+        /// <returns></returns>
         public bool Test1()
         {
             return c.IssueTest1Request(false);
         }
 
+        /// <summary>
+        /// test action2
+        /// </summary>
+        /// <returns></returns>
         public bool Test2()
         {
             return c.IssueTest2Request(false);
+        }
+
+        /// <summary>
+        /// A complete move for ABB robots. Sending trans, rot and robconf data to the robot.
+        /// </summary>
+        /// <param name="position">Vector X, Y, Z</param>
+        /// <param name="q1">rot quaternion1</param>
+        /// <param name="q2">rot quaternion2</param>
+        /// <param name="q3">rot quaternion3</param>
+        /// <param name="q4">rot quaternion4</param>
+        /// <param name="cf1">axis configuration1</param>
+        /// <param name="cf2">axis configuration2</param>
+        /// <param name="cf3">axis configuration3</param>
+        /// <param name="cf4">axis configuration4</param>
+        /// <returns></returns>
+        public bool MoveToRobTarget(Vector position, double q1, double q2, double q3, double q4, double cf1, double cf2, double cf3, double cf4)
+        {
+            return c.IssueMoveToRobTargetRequest(position, q1, q2, q3, q4, cf1, cf2, cf3, cf4, false);
+        }
+
+        /// <summary>
+        /// A complete move for ABB robots. Sending trans, rot and robconf data to the robot.
+        /// </summary>
+        /// <param name="x">X coordinate</param>
+        /// <param name="y">Y coordinate</param>
+        /// <param name="z">Z coordinate</param>
+        /// <param name="q1">rot quaternion1</param>
+        /// <param name="q2">rot quaternion2</param>
+        /// <param name="q3">rot quaternion3</param>
+        /// <param name="q4">rot quaternion4</param>
+        /// <param name="cf1">axis configuration1</param>
+        /// <param name="cf2">axis configuration2</param>
+        /// <param name="cf3">axis configuration3</param>
+        /// <param name="cf4">axis configuration4</param>
+        /// <returns></returns>
+        public bool MoveToRobTarget(double x, double y, double z, double q1, double q2, double q3, double q4, double cf1, double cf2, double cf3, double cf4)
+        {
+            return MoveToRobTarget(new Vector(x, y, z), q1, q2, q3, q4, cf1, cf2, cf3, cf4);
         }
 
 
