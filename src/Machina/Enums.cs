@@ -6,12 +6,6 @@ using System.Threading.Tasks;
 
 namespace Machina
 {
-
-    public enum RedoAction : int
-    {
-        test1,
-        test2
-    }
     /// <summary>
     /// Represents the type of control that will be performed over the real/virtual robot.
     /// </summary>

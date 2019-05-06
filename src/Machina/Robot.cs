@@ -34,8 +34,6 @@ namespace Machina
     /// </summary>
     public class Robot
     {
-        public static int _inExecution = 0;
-
         /// <summary>
         /// Build number.
         /// </summary>
@@ -1512,32 +1510,23 @@ namespace Machina
 
 
 
-    //  ███████╗██╗   ██╗███████╗███╗   ██╗████████╗███████╗
-    //  ██╔════╝██║   ██║██╔════╝████╗  ██║╚══██╔══╝██╔════╝
-    //  █████╗  ██║   ██║█████╗  ██╔██╗ ██║   ██║   ███████╗
-    //  ██╔══╝  ╚██╗ ██╔╝██╔══╝  ██║╚██╗██║   ██║   ╚════██║
-    //  ███████╗ ╚████╔╝ ███████╗██║ ╚████║   ██║   ███████║
-    //  ╚══════╝  ╚═══╝  ╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝
-    //                                                      
-    /// <summary>
-    /// Will be raised whenever an Action has been successfully issued and is scheduled for release to the device or compilation. 
-    /// </summary>
+    //  ███████╗██╗   ██╗███████╗███╗   ██╗████████╗███████╗	
+    //  ██╔════╝██║   ██║██╔════╝████╗  ██║╚══██╔══╝██╔════╝	
+    //  █████╗  ██║   ██║█████╗  ██╔██╗ ██║   ██║   ███████╗	
+    //  ██╔══╝  ╚██╗ ██╔╝██╔══╝  ██║╚██╗██║   ██║   ╚════██║	
+    //  ███████╗ ╚████╔╝ ███████╗██║ ╚████║   ██║   ███████║	
+    //  ╚══════╝  ╚═══╝  ╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝	
+    //                                                      	
+    /// <summary>	
+    /// Will be raised whenever an Action has been successfully issued and is scheduled for release to the device or compilation. 	
+    /// </summary>	
     public event ActionIssuedHandler ActionIssued;
     public delegate void ActionIssuedHandler(object sender, ActionIssuedArgs args);
-    internal virtual void OnActionIssued(ActionIssuedArgs args)
-    {
-        // Actions that will not go to function OnActionExecuted should be added here.
-        if (args.LastAction.Type != ActionType.DefineTool &&
-            args.LastAction.Type != ActionType.MotionMode)
-        {
-            _inExecution++;
-        }
-        ActionIssued?.Invoke(this, args);
-    }
+    internal virtual void OnActionIssued(ActionIssuedArgs args) => ActionIssued?.Invoke(this, args);
 
-    /// <summary>
-    /// Will be raised whenever an Action has been released to the device and is scheduled for execution.
-    /// </summary>
+    /// <summary>	
+    /// Will be raised whenever an Action has been released to the device and is scheduled for execution.	
+    /// </summary>	
     public event ActionReleasedHandler ActionReleased;
     public delegate void ActionReleasedHandler(object sender, ActionReleasedArgs args);
     internal virtual void OnActionReleased(ActionReleasedArgs args) => ActionReleased?.Invoke(this, args);
@@ -1547,11 +1536,8 @@ namespace Machina
     /// </summary>
     public event ActionExecutedHandler ActionExecuted;
     public delegate void ActionExecutedHandler(object sender, ActionExecutedArgs args);
-    internal virtual void OnActionExecuted(ActionExecutedArgs args)
-    {
-        _inExecution -= 1;
-        ActionExecuted?.Invoke(this, args);
-    }
+    internal virtual void OnActionExecuted(ActionExecutedArgs args) => ActionExecuted?.Invoke(this, args);
+    
     /// <summary>
     /// Will be raised whenever new information is available about the real-time information about the state of the device.
     /// </summary>
