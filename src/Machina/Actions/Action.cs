@@ -51,6 +51,8 @@ namespace Machina
         Test2,
         MoveToRobTarget,
         MovecToRobTarget,
+        AbbDefineTool,
+        AbbAttachTool,
     }
 
     

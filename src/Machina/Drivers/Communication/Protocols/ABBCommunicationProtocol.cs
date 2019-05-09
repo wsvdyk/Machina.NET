@@ -133,6 +133,30 @@ namespace Machina.Drivers.Communication.Protocols
                         cursor.cf2[0], cursor.cf2[1], cursor.cf2[2], cursor.cf2[3],
                         STR_MESSAGE_END_CHAR));
                     break;
+                case ActionType.AbbDefineTool:
+                    // Add a log here to avoid a confusing default warning.
+                    Logger.Verbose("`DefineTool()` doesn't need to be streamed.");
+                    break;
+                case ActionType.AbbAttachTool:
+                    Tool2 tool = cursor.tool2;
+
+                    msgs.Add(string.Format(CultureInfo.InvariantCulture,
+                        "{0}{1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12} {13}{14}",
+                        STR_MESSAGE_ID_CHAR,
+                        action.Id,
+                        INST_ABBTOOL,
+                        // math.round needed here? RobotStudio uses upto 9 decimal numbers
+                        Math.Round(tool.TCPPosition.X, Geometry.STRING_ROUND_DECIMALS_MM),
+                        Math.Round(tool.TCPPosition.Y, Geometry.STRING_ROUND_DECIMALS_MM),
+                        Math.Round(tool.TCPPosition.Z, Geometry.STRING_ROUND_DECIMALS_MM),
+                        Math.Round(tool.TCPOrientation[0], Geometry.STRING_ROUND_DECIMALS_QUAT),
+                        Math.Round(tool.TCPOrientation[1], Geometry.STRING_ROUND_DECIMALS_QUAT),
+                        Math.Round(tool.TCPOrientation[2], Geometry.STRING_ROUND_DECIMALS_QUAT),
+                        Math.Round(tool.TCPOrientation[3], Geometry.STRING_ROUND_DECIMALS_QUAT),
+                        Math.Round(tool.Weight, Geometry.STRING_ROUND_DECIMALS_KG),
+                        Math.Round(tool.CenterOfGravity.X, Geometry.STRING_ROUND_DECIMALS_MM),
+                        Math.Round(tool.CenterOfGravity.Y, Geometry.STRING_ROUND_DECIMALS_MM),
+                        Math.Round(tool.CenterOfGravity.Z, Geometry.STRING_ROUND_DECIMALS_MM),
                         STR_MESSAGE_END_CHAR));
                     break;
 

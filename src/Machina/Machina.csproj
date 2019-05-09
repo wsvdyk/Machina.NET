@@ -75,6 +75,8 @@
   <ItemGroup>
     <Compile Include="Actions\Action.cs" />
     <Compile Include="ActionBuffer.cs" />
+    <Compile Include="Actions\ActionAbbAttachTool.cs" />
+    <Compile Include="Actions\ActionAbbDefineTool.cs" />
     <Compile Include="Actions\ActionAcceleration.cs" />
     <Compile Include="Actions\ActionArmAngle.cs" />
     <Compile Include="Actions\ActionAttachTool.cs" />
@@ -135,6 +137,7 @@
     <Compile Include="IO\IO.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Net\Net.cs" />
+    <Compile Include="Tools\Tool2.cs" />
     <Compile Include="Types\AxisAngle.cs" />
     <Compile Include="Types\ExternalAxes.cs" />
     <Compile Include="Types\Orientation.cs" />

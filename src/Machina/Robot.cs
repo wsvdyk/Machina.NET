@@ -418,6 +418,25 @@ namespace Machina
             return c.IssueAbbDefineToolRequest(name, position, orient, weight, cogX, cogY, cogZ);
         }
 
+        public bool AbbDefineTool(string name, double tcpX, double tcpY, double tcpZ,
+            double tcpOrient1, double tcpOrient2, double tcpOrient3, double tcpOrient4,
+            double weight, double cogX, double cogY, double cogZ)
+        {
+            if (!Utilities.Strings.IsValidVariableName(name))
+            {
+                logger.Error($"\"{name}\" is not a valid tool name, please start with a letter.");
+                return false;
+            }
+            double[] orient = new double[] { tcpOrient1, tcpOrient2, tcpOrient3, tcpOrient4 };
+            
+            return AbbDefineTool(name, 
+                new Point(tcpX, tcpY, tcpZ), 
+                orient, weight, cogX, cogY, cogZ);
+        }
+
+        public bool AbbAttachTool(string name)
+        {
+            return c.IssueAbbAttachToolRequest(name);
         }
 
 

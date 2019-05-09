@@ -755,6 +755,14 @@ namespace Machina
         public bool IssueMovecToRobTargetRequest(Vector trans1, double[,] data1, Vector trans2, double[,] data2, bool relative) =>
             IssueApplyActionRequest(new ActionMovecToRobTarget(trans1, data1, trans2, data2, relative));
 
+        public bool IssueAbbDefineToolRequest(string name, Vector positie, double[] orient, double weight, double cogX, double cogY, double cogZ) =>
+            IssueApplyActionRequest(new ActionAbbDefineTool(name, positie, orient, weight, cogX, cogY, cogZ));
+
+        public bool IssueAbbAttachToolRequest(string name) =>
+            IssueApplyActionRequest(new ActionAbbAttachTool(name));
+
+
+
         //  ███████╗██╗  ██╗██╗███████╗████████╗██╗███╗   ██╗ ██████╗ 
         //  ██╔════╝╚██╗██╔╝██║██╔════╝╚══██╔══╝██║████╗  ██║██╔════╝ 
         //  █████╗   ╚███╔╝ ██║███████╗   ██║   ██║██╔██╗ ██║██║  ███╗

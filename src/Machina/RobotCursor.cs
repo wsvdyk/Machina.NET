@@ -40,7 +40,8 @@ namespace Machina
         public double? armAngle;
         public MotionType motionType;
         public ReferenceCS referenceCS;
-        public Tool tool;
+        public Tool  tool;
+        public Tool2 tool2;
 
         public double[] q1  = new double[4];
         public double[] q2  = new double[4];
@@ -53,7 +54,8 @@ namespace Machina
         public ExternalAxes externalAxesJoints;
 
         // Keep a dictionary of all Tools that have been defined on this robot, and are available for Attach/Detach
-        internal Dictionary<string, Tool> availableTools;
+        internal Dictionary<string, Tool>  availableTools;
+        internal Dictionary<string, Tool2> availableTools2;
 
         // Some robots use ints as pin identifiers (UR, KUKA), while others use strings (ABB). 
         // All pin ids are stored as strings, and are parsed to ints internally if possible. 
@@ -202,7 +204,8 @@ namespace Machina
             this.motionType = mType;
             this.referenceCS = refCS;
 
-            this.availableTools = new Dictionary<string, Tool>();
+            this.availableTools  = new Dictionary<string, Tool>();
+            this.availableTools2 = new Dictionary<string, Tool2>();
 
             // Add a "noTool" default object and make it the default.
             //this.availableTools["noTool"] = Tool.Create("noTool", 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.001, 0, 0, 0);
@@ -463,6 +466,8 @@ namespace Machina
             { typeof (ActionTest2),                     (act, robCur) => robCur.ApplyAction((ActionTest2) act)},
             { typeof (ActionMoveToRobTarget),           (act, robCur) => robCur.ApplyAction((ActionMoveToRobTarget) act)},
             { typeof (ActionMovecToRobTarget),          (act, robCur) => robCur.ApplyAction((ActionMovecToRobTarget) act)},
+            { typeof (ActionAbbDefineTool),             (act, robCur) => robCur.ApplyAction((ActionAbbDefineTool) act) },
+            { typeof (ActionAbbAttachTool),             (act, robCur) => robCur.ApplyAction((ActionAbbAttachTool) act) },
         };
 
         /// <summary>
@@ -705,8 +710,76 @@ namespace Machina
             return true;
         }
 
+        /// <summary>
+        /// Adds the defined Tool to this cursor's Tool dict, becoming avaliable for Attach/Detach Actions.
+        /// </summary>
+        /// <param name="action"></param>
+        /// <returns></returns>
+        public bool ApplyAction(ActionAbbDefineTool action)
+        {
+            // Sanity
+            if (availableTools2.ContainsKey(action.tool.name))
             {
+                logger.Info($"Robot already had a tool defined as \"{action.tool.name}\"; this will be overwritten.");
+                availableTools2.Remove(action.tool.name);
             }
+
+            availableTools2.Add(action.tool.name, action.tool);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Apply Attach Tool Action.
+        /// </summary>
+        /// <param name="action"></param>
+        /// <returns></returns>
+        public bool ApplyAction(ActionAbbAttachTool action)
+        {
+            // Sanity: this is a fix for pre-0.8.x compatibility where Attach came with the Tool object, not the name. 
+            // Older versions of Machina would yield error searching for `null` key on `availableTools`
+            if (action.toolName == null)
+            {
+                logger.Error($"Obsolete version of AttachTool; please update Machina to latest update.");
+                return false;
+            }
+
+            // Sanity
+            if (!availableTools2.ContainsKey(action.toolName))
+            {
+                logger.Warning($"No tool named \"{action.toolName}\" defined in this robot; please use \"AbbDefineTool\" first.");
+                return false;
+            }
+            // This would not work in case the user had defined a new tool with different values but same name (not great practice, but technically possible anyway...)
+            //if (action.toolName == this.tool.name)
+            //{
+            //    logger.Verbose($"Attaching the same tool? No changes...");
+            //    return true;
+            //}
+
+
+            // The cursor has now a tool attached to it 
+            Tool2 prevTool = this.tool2;
+            this.tool2 = availableTools2[action.toolName];
+
+            // Shim for lack of IK 
+            // If coming from axes motion, no need to transform the TCP
+            // No Need to do all this. Complete tooldata is send to the ABB robot, ABB robot will do all calculation
+            /*if (this.position == null || this.rotation == null)
+            {
+                logger.Warning($"Attaching tool without TCP values, inconsistent results may follow...?");
+            }
+            // Otherwise transform the TCP
+            else
+            {
+                if (prevTool != null)
+                {
+                    logger.Debug($"Detaching tool {prevTool.name} before attaching {this.tool.name}.");
+                    UndoToolTransformOnCursor(this, prevTool, logger, _logRelativeActions);
+                }
+
+                ApplyToolTransformToCursor(this, this.tool2, logger, _logRelativeActions);
+            }*/
 
             return true;
         }
