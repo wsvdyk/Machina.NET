@@ -91,6 +91,7 @@
     <Compile Include="Actions\ActionIODigital.cs" />
     <Compile Include="Actions\ActionMessage.cs" />
     <Compile Include="Actions\ActionMotion.cs" />
+    <Compile Include="Actions\ActionMovecToRobTarget.cs" />
     <Compile Include="Actions\ActionMoveToRobTarget.cs" />
     <Compile Include="Actions\ActionPrecision.cs" />
     <Compile Include="Actions\ActionPushPop.cs" />
@@ -139,6 +140,7 @@
     <Compile Include="Types\Orientation.cs" />
     <Compile Include="Types\Geometry.cs" />
     <Compile Include="Types\Plane.cs" />
+    <Compile Include="Types\RobTarget.cs" />
     <Compile Include="Types\Rotation.cs" />
     <Compile Include="Types\t_CoordinateSystem.cs" />
     <Compile Include="Types\Joints.cs" />

@@ -79,13 +79,19 @@ namespace Machina
         Linear,
 
         /// <summary>
-        /// USE WITH CAUTION. Motion between targets will hapen linearly in Configuration space, 
+        /// USE WITH CAUTION. Motion between targets will happen linearly in Configuration space, 
         /// this is, a linear interpolation between the joint angular values for 
         /// each target. This is much easier for the robot, and generally avoids some
         /// singularity problems. However, it may produce unpredictable trajectories 
         /// and reorientations, specially between targets far apart. 
         /// </summary>
-        Joint
+        Joint,
+
+        /// <summary>
+        /// USE WITH CAUTION. Motion between targets will happen circularly in Euclidean spae,
+        /// this is a circular line in 3D space.
+        /// </summary>
+        circularly
     }
 
     /// <summary>

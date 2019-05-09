@@ -332,7 +332,7 @@ namespace Machina
         //{
         //    c.Execute();
         //}
-        
+
 
         //  ███╗   ███╗██╗   ██╗     ██████╗ ██╗    ██╗███╗   ██╗    
         //  ████╗ ████║╚██╗ ██╔╝    ██╔═══██╗██║    ██║████╗  ██║    
@@ -368,33 +368,56 @@ namespace Machina
         /// <param name="q3">rot quaternion3</param>
         /// <param name="q4">rot quaternion4</param>
         /// <param name="cf1">axis configuration1</param>
-        /// <param name="cf2">axis configuration2</param>
-        /// <param name="cf3">axis configuration3</param>
-        /// <param name="cf4">axis configuration4</param>
+        /// <param name="cf4">axis configuration2</param>
+        /// <param name="cf6">axis configuration3</param>
+        /// <param name="cfX">axis configuration4</param>
         /// <returns></returns>
-        public bool MoveToRobTarget(Vector position, double q1, double q2, double q3, double q4, double cf1, double cf2, double cf3, double cf4)
+        public bool MoveToRobTarget(Vector position, double q1, double q2, double q3, double q4, double cf1, double cf4, double cf6, double cfX)
         {
-            return c.IssueMoveToRobTargetRequest(position, q1, q2, q3, q4, cf1, cf2, cf3, cf4, false);
+            return c.IssueMoveToRobTargetRequest(position, q1, q2, q3, q4, cf1, cf4, cf6, cfX, false);
         }
 
         /// <summary>
         /// A complete move for ABB robots. Sending trans, rot and robconf data to the robot.
         /// </summary>
-        /// <param name="x">X coordinate</param>
-        /// <param name="y">Y coordinate</param>
-        /// <param name="z">Z coordinate</param>
+        /// <param name="position">Vector X, Y, Z</param>
         /// <param name="q1">rot quaternion1</param>
         /// <param name="q2">rot quaternion2</param>
         /// <param name="q3">rot quaternion3</param>
         /// <param name="q4">rot quaternion4</param>
         /// <param name="cf1">axis configuration1</param>
-        /// <param name="cf2">axis configuration2</param>
-        /// <param name="cf3">axis configuration3</param>
-        /// <param name="cf4">axis configuration4</param>
+        /// <param name="cf4">axis configuration2</param>
+        /// <param name="cf6">axis configuration3</param>
+        /// <param name="cfX">axis configuration4</param>
         /// <returns></returns>
-        public bool MoveToRobTarget(double x, double y, double z, double q1, double q2, double q3, double q4, double cf1, double cf2, double cf3, double cf4)
+        public bool MoveToRobTarget(double x, double y, double z, double q1, double q2, double q3, double q4, double cf1, double cf4, double cf6, double cfX)
         {
-            return MoveToRobTarget(new Vector(x, y, z), q1, q2, q3, q4, cf1, cf2, cf3, cf4);
+            return MoveToRobTarget(new Vector(x, y, z), q1, q2, q3, q4, cf1, cf4, cf6, cfX);
+        }
+
+        public bool MovecToRobTarget(Vector position1, double[,] data1, Vector position2, double[,] data2)
+        {
+            return c.IssueMovecToRobTargetRequest(position1, data1, position2, data2, false);
+        }
+
+        public bool MovecToRobTarget(double x_1, double y_1, double z_1, 
+            double q1_1, double q2_1, double q3_1, double q4_1, 
+            double cf1_1, double cf4_1, double cf6_1, double cfX_1,
+            double x_2, double y_2, double z_2,
+            double q1_2, double q2_2, double q3_2, double q4_2,
+            double cf1_2, double cf4_2, double cf6_2, double cfX_2)
+        {
+            double[,] data1 = new double[,] { { q1_1, q2_1, q3_1, q4_1 }, { cf1_1, cf4_1, cf6_1, cfX_1 } };
+            double[,] data2 = new double[,] { { q2_1, q2_2, q3_2, q4_2, }, { cf1_2, cf4_2, cf6_2, cfX_2 } };
+            return MovecToRobTarget(new Vector(x_1, y_1, z_1), data1, new Vector(x_2, y_2, z_2), data2);
+        }
+
+        public bool AbbDefineTool(String name, Point position, double[] orient, 
+            double weight, double cogX, double cogY, double cogZ)
+        {
+            return c.IssueAbbDefineToolRequest(name, position, orient, weight, cogX, cogY, cogZ);
+        }
+
         }
 
 

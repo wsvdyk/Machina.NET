@@ -749,8 +749,11 @@ namespace Machina
         /// <param name="trans"></param>
         /// <param name="relative"></param>
         /// <returns></returns>
-        public bool IssueMoveToRobTargetRequest(Vector trans, double q1, double q2, double q3, double q4, double cf1, double cf2, double cf3, double cf4, bool relative) =>
-            IssueApplyActionRequest(new ActionMoveToRobTarget(trans, q1, q2, q3, q4, cf1, cf2, cf3, cf4, relative));
+        public bool IssueMoveToRobTargetRequest(Vector trans, double q1, double q2, double q3, double q4, double cf1, double cf4, double cf6, double cfX, bool relative) =>
+            IssueApplyActionRequest(new ActionMoveToRobTarget(trans, q1, q2, q3, q4, cf1, cf4, cf6, cfX, relative));
+
+        public bool IssueMovecToRobTargetRequest(Vector trans1, double[,] data1, Vector trans2, double[,] data2, bool relative) =>
+            IssueApplyActionRequest(new ActionMovecToRobTarget(trans1, data1, trans2, data2, relative));
 
         //  ███████╗██╗  ██╗██╗███████╗████████╗██╗███╗   ██╗ ██████╗ 
         //  ██╔════╝╚██╗██╔╝██║██╔════╝╚══██╔══╝██║████╗  ██║██╔════╝ 

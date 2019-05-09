@@ -31,7 +31,7 @@ namespace Machina
 
         // Public props
         public string name;
-        public Vector position, prevPosition;
+        public Vector position, prevPosition, tempPosition;
         public Rotation rotation, prevRotation;
         public Joints axes, prevAxes;
         public double speed;
@@ -42,8 +42,10 @@ namespace Machina
         public ReferenceCS referenceCS;
         public Tool tool;
 
-        public double[] q  = new double[4];
-        public double[] cf = new double[4];
+        public double[] q1  = new double[4];
+        public double[] q2  = new double[4];
+        public double[] cf1 = new double[4];
+        public double[] cf2 = new double[4];
 
 
         // Because of YuMi, now we are keeping track of two sets of external axes! @TODO: make this less ABB-centric somehow?
@@ -460,6 +462,7 @@ namespace Machina
             { typeof (ActionTest1),                     (act, robCur) => robCur.ApplyAction((ActionTest1) act)},
             { typeof (ActionTest2),                     (act, robCur) => robCur.ApplyAction((ActionTest2) act)},
             { typeof (ActionMoveToRobTarget),           (act, robCur) => robCur.ApplyAction((ActionMoveToRobTarget) act)},
+            { typeof (ActionMovecToRobTarget),          (act, robCur) => robCur.ApplyAction((ActionMovecToRobTarget) act)},
         };
 
         /// <summary>
@@ -661,20 +664,48 @@ namespace Machina
         {
             Vector newPosition = new Vector();
 
-            newPosition.Set(action.translation);
+            newPosition.Set(action.rt.position);
 
             prevPosition = position;
             position = newPosition;
 
-            prevRotation = rotation;  // to flag same-orientation change
+            prevRotation = rotation;    // to flag same-orientation change
 
             prevAxes = axes;
-            axes = null;      // flag joints as null to avoid Joint instructions using obsolete data
+            axes = null;                // flag joints as null to avoid Joint instructions using obsolete data
 
-            for (int i = 0; i < 4; i++)
+            q1  = action.rt.quaternion;
+            cf1 = action.rt.confdata;
+
+            return true;
+        }
+
+        public bool ApplyAction(ActionMovecToRobTarget action)
+        {
+            Vector tempPosition = new Vector();
+            Vector newPosition  = new Vector();
+
+            tempPosition.Set(action.rt1.position);
+            newPosition.Set(action.rt2.position);
+
+            this.prevPosition = position;
+            this.tempPosition = tempPosition;
+            this.position = newPosition;
+
+            prevRotation = rotation;    // to flag same-orientation change
+
+            prevAxes = axes;
+            axes = null;                // flag joints as null to avoid Joint instructions using obsolete data
+
+            q1  = action.rt1.quaternion;
+            cf1 = action.rt1.confdata;
+            q2  = action.rt2.quaternion;
+            cf1 = action.rt2.confdata;
+
+            return true;
+        }
+
             {
-                this.q[i]  = action.q[i];
-                this.cf[i] = action.cf[i];
             }
 
             return true;

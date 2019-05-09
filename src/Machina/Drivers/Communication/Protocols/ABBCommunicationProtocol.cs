@@ -18,22 +18,22 @@ namespace Machina.Drivers.Communication.Protocols
         //                                                      // INSTRUCTION P1 P2 P3 P4...
         internal const int INST_MOVEL = 1;                      // MoveL X Y Z QW QX QY QZ
         internal const int INST_MOVEJ = 2;                      // MoveJ X Y Z QW QX QY QZ
-        internal const int INST_MOVEABSJ = 3;                   // MoveAbsJ J1 J2 J3 J4 J5 J6
-        internal const int INST_SPEED = 4;                      // (setspeed V_TCP[V_ORI V_LEAX V_REAX])
-        internal const int INST_ZONE = 5;                       // (setzone FINE TCP[ORI EAX ORI LEAX REAX])
-        internal const int INST_WAITTIME = 6;                   // WaitTime T
-        internal const int INST_TPWRITE = 7;                    // TPWrite "MSG"
-        internal const int INST_TOOL = 8;                       // (settool X Y Z QW QX QY QZ KG CX CY CZ)
-        internal const int INST_NOTOOL = 9;                     // (settool tool0)
-        internal const int INST_SETDO = 10;                     // SetDO "NAME" ON
-        internal const int INST_SETAO = 11;                     // SetAO "NAME" V
-        internal const int INST_EXT_JOINTS_ALL = 12;            // (setextjoints a1 a2 a3 a4 a5 a6) --> send non-string 9E9 for inactive axes
-        internal const int INST_ACCELERATION = 13;              // WorldAccLim \On V (V = 0 sets \Off, any other value sets WorldAccLim \On V)
-        internal const int INST_SING_AREA = 14;                 // SingArea bool (sets Wrist or Off)
-        internal const int INST_EXT_JOINTS_ROBTARGET = 15;      // (setextjoints a1 a2 a3 a4 a5 a6, applies only to robtarget)
-        internal const int INST_EXT_JOINTS_JOINTTARGET = 16;    // (setextjoints a1 a2 a3 a4 a5 a6, applies only to robtarget)
-        internal const int INST_CUSTOM_ACTION = 17;             // This is a wildcard for custom user functions that do not really fit in the Machina API (mainly Yumi gripping right now)
-
+        internal const int INST_MOVEC = 3;                      // MoveC X Y Z QW QX QY QZ
+        internal const int INST_MOVEABSJ = 4;                   // MoveAbsJ J1 J2 J3 J4 J5 J6
+        internal const int INST_SPEED = 5;                      // (setspeed V_TCP[V_ORI V_LEAX V_REAX])
+        internal const int INST_ZONE = 6;                       // (setzone FINE TCP[ORI EAX ORI LEAX REAX])
+        internal const int INST_WAITTIME = 7;                   // WaitTime T
+        internal const int INST_TPWRITE = 8;                    // TPWrite "MSG"
+        internal const int INST_TOOL = 9;                       // (settool X Y Z QW QX QY QZ KG CX CY CZ)
+        internal const int INST_NOTOOL = 10;                     // (settool tool0)
+        internal const int INST_SETDO = 11;                     // SetDO "NAME" ON
+        internal const int INST_SETAO = 12;                     // SetAO "NAME" V
+        internal const int INST_EXT_JOINTS_ALL = 13;            // (setextjoints a1 a2 a3 a4 a5 a6) --> send non-string 9E9 for inactive axes
+        internal const int INST_ACCELERATION = 14;              // WorldAccLim \On V (V = 0 sets \Off, any other value sets WorldAccLim \On V)
+        internal const int INST_SING_AREA = 15;                 // SingArea bool (sets Wrist or Off)
+        internal const int INST_EXT_JOINTS_ROBTARGET = 16;      // (setextjoints a1 a2 a3 a4 a5 a6, applies only to robtarget)
+        internal const int INST_EXT_JOINTS_JOINTTARGET = 17;    // (setextjoints a1 a2 a3 a4 a5 a6, applies only to robtarget)
+        internal const int INST_CUSTOM_ACTION = 18;             // This is a wildcard for custom user functions that do not really fit in the Machina API (mainly Yumi gripping right now)
 
         //  ███╗   ███╗██╗   ██╗     ██████╗ ██╗    ██╗███╗   ██╗
         //  ████╗ ████║╚██╗ ██╔╝    ██╔═══██╗██║    ██║████╗  ██║
@@ -42,11 +42,12 @@ namespace Machina.Drivers.Communication.Protocols
         //  ██║ ╚═╝ ██║   ██║       ╚██████╔╝╚███╔███╔╝██║ ╚████║
         //  ╚═╝     ╚═╝   ╚═╝        ╚═════╝  ╚══╝╚══╝ ╚═╝  ╚═══╝
 
-        internal const int INST_TEST1 = 18;
-        internal const int INST_TEST2 = 19;
-        internal const int INST_MOVETOCOMPLETEL = 20;
-        internal const int INST_MOVETOCOMPLETEJ = 21;
-
+        internal const int INST_TEST1 = 19;
+        internal const int INST_TEST2 = 20;
+        internal const int INST_MOVELTOROBTARGET = 21;          // MoveL X Y Z QW QX QY QZ CF1 CF4 CF6 CFX
+        internal const int INST_MOVEJTOROBTARGET = 22;          // MoveJ X Y Z QW QX QY QZ CF1 CF4 CF6 CFX
+        internal const int INST_MOVECTOROBTARGET = 23;          // MoveC X Y Z QW QX QY QZ CF1 CF4 CF6 CFX
+        internal const int INST_ABBTOOL = 24;                   // settool X Y Z QW QX QY QZ KG CX CY CZ
 
         internal const int RES_VERSION = 20;                    // ">20 1 2 1;" Sends version numbers
         internal const int RES_POSE = 21;                       // ">21 400 300 500 0 0 1 0;"
@@ -106,12 +107,32 @@ namespace Machina.Drivers.Communication.Protocols
                         "{0}{1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12} {13}{14}",
                         STR_MESSAGE_ID_CHAR,
                         action.Id,
-                        cursor.motionType == MotionType.Linear ? INST_MOVETOCOMPLETEL : INST_MOVETOCOMPLETEJ,
+                        cursor.motionType == MotionType.Linear ? INST_MOVELTOROBTARGET : INST_MOVEJTOROBTARGET,
+                        cursor.position.X,
+                        cursor.position.Y,
+                        cursor.position.Z,
+                        cursor.q1[0], cursor.q1[1], cursor.q1[2], cursor.q1[3],
+                        cursor.cf1[0], cursor.cf1[1], cursor.cf1[2], cursor.cf1[3],
+                        STR_MESSAGE_END_CHAR));
+                    break;
+                case ActionType.MovecToRobTarget:
+                    msgs.Add(string.Format(CultureInfo.InvariantCulture,
+                        "{0}{1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12} {13} {14} {15} {16} {17} {18} {19} {20} {21} {22} {23} {24}{25}",
+                        STR_MESSAGE_ID_CHAR,
+                        action.Id,
+                        INST_MOVECTOROBTARGET,
+                        Math.Round(cursor.tempPosition.X, Geometry.STRING_ROUND_DECIMALS_MM),
+                        Math.Round(cursor.tempPosition.Y, Geometry.STRING_ROUND_DECIMALS_MM),
+                        Math.Round(cursor.tempPosition.Z, Geometry.STRING_ROUND_DECIMALS_MM),
+                        cursor.q1[0], cursor.q1[1], cursor.q1[2], cursor.q1[3],
+                        cursor.cf1[0], cursor.cf1[1], cursor.cf1[2], cursor.cf1[3],
                         Math.Round(cursor.position.X, Geometry.STRING_ROUND_DECIMALS_MM),
                         Math.Round(cursor.position.Y, Geometry.STRING_ROUND_DECIMALS_MM),
                         Math.Round(cursor.position.Z, Geometry.STRING_ROUND_DECIMALS_MM),
-                        cursor.q[0], cursor.q[1], cursor.q[2], cursor.q[3],
-                        cursor.cf[0], cursor.cf[1], cursor.cf[2], cursor.cf[3],
+                        cursor.q2[0], cursor.q2[1], cursor.q2[2], cursor.q2[3],
+                        cursor.cf2[0], cursor.cf2[1], cursor.cf2[2], cursor.cf2[3],
+                        STR_MESSAGE_END_CHAR));
+                    break;
                         STR_MESSAGE_END_CHAR));
                     break;
 

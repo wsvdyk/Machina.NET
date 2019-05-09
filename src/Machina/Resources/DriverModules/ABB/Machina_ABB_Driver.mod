@@ -12,7 +12,7 @@
     ! waits for a TCP client, listens to a stream of formatted string messages,
     ! buffers them parsed into an 'action' struct, and runs a loop to execute them.
     !
-    ! IMPORTANT: make sure to adjust {{HOSTNAME}} and {{PORT}} to your current setup
+    ! IMPORTANT: make sure to adjust 127.0.0.1 and 7000 to your current setup
     !
     ! More info on https://github.com/RobotExMachina
     ! A project by https://github.com/garciadelcastillo
@@ -52,14 +52,16 @@
         num code;
         string s1;
         ! `Records` cannot contain arrays... :(
-        num p1; num p2; num p3; num p4; num p5;
-        num p6; num p7; num p8; num p9; num p10;
-        num p11;
+        num p1;  num p2;  num p3;  num p4;  num p5;
+        num p6;  num p7;  num p8;  num p9;  num p10;
+        num p11; num p12; num p13; num p14; num p15;
+		num p16; num p17; num p18; num p19; num p20;
+		num p21; num p22;
     ENDRECORD
 
     ! SERVER DATA --> to modify by user
-    PERS string SERVER_IP := "{{HOSTNAME}}";     ! Replace "127.0.0.1" with device IP, typically "192.168.125.1" if working with a real robot or "127.0.0.1" if testing a virtual one (RobotStudio)
-    CONST num SERVER_PORT := {{PORT}};           ! Replace 7000 with custom port number, like for example 7000
+    PERS string SERVER_IP := "127.0.0.1";     ! Replace "127.0.0.1" with device IP, typically "192.168.125.1" if working with a real robot or "127.0.0.1" if testing a virtual one (RobotStudio)
+    CONST num SERVER_PORT := 7000;           ! Replace 7000 with custom port number, like for example 7000
 
     ! Useful for handshakes and version compatibility checks...
     CONST string MACHINA_SERVER_VERSION := "1.4.1";
@@ -73,24 +75,25 @@
     LOCAL VAR socketdev clientSocket;
 
     ! A RAPID-code oriented API:
-    !                                                 INSTRUCTION P1 P2 P3 P4...
-    CONST num INST_MOVEL := 1;                      ! MoveL X Y Z QW QX QY QZ
-    CONST num INST_MOVEJ := 2;                      ! MoveJ X Y Z QW QX QY QZ
-    CONST num INST_MOVEABSJ := 3;                   ! MoveAbsJ J1 J2 J3 J4 J5 J6
-    CONST num INST_SPEED := 4;                      ! (setspeed V_TCP [V_ORI V_LEAX V_REAX])
-    CONST num INST_ZONE := 5;                       ! (setzone FINE TCP [ORI EAX ORI LEAX REAX])
-    CONST num INST_WAITTIME := 6;                   ! WaitTime T
-    CONST num INST_TPWRITE := 7;                    ! TPWrite "MSG"
-    CONST num INST_TOOL := 8;                       ! (settool X Y Z QW QX QY QZ KG CX CY CZ)
-    CONST num INST_NOTOOL := 9;                     ! (settool tool0)
-    CONST num INST_SETDO := 10;                     ! SetDO "NAME" ON
-    CONST num INST_SETAO := 11;                     ! SetAO "NAME" V
-    CONST num INST_EXT_JOINTS_ALL := 12;            ! (setextjoints a1 a2 a3 a4 a5 a6, applies to both rob and jointtarget) --> send non-string 9E9 for inactive axes
-    CONST num INST_ACCELERATION := 13;              ! WorldAccLim \On V (V = 0 sets \Off, any other value sets WorldAccLim \On V)
-    CONST num INST_SING_AREA := 14;                 ! SingArea ON (ON = 0 sets SingArea \Off, any other value sets SingArea \Wrist)
-    CONST num INST_EXT_JOINTS_ROBTARGET := 15;      ! (setextjoints a1 a2 a3 a4 a5 a6, applies only to robtarget)
-    CONST num INST_EXT_JOINTS_JOINTTARGET := 16;    ! (setextjoints a1 a2 a3 a4 a5 a6, applies only to robtarget)
-    CONST num INST_CUSTOM_ACTION := 17;             ! This is a wildcard for custom user functions that do not really fit in the Machina API (mainly Yumi gripping right now)\
+    !                                               ! INSTRUCTION P1 P2 P3 P4...
+    CONST NUM INST_MOVEL := 1;                      ! MoveL X Y Z QW QX QY QZ
+    CONST NUM INST_MOVEJ := 2;                      ! MoveJ X Y Z QW QX QY QZ
+    CONST NUM INST_MOVEC := 3;                      ! MoveC X Y Z QW QX QY QZ
+    CONST NUM INST_MOVEABSJ := 4;                   ! MoveAbsJ J1 J2 J3 J4 J5 J6
+    CONST NUM INST_SPEED := 5;                      ! (setspeed V_TCP[V_ORI V_LEAX V_REAX])
+    CONST NUM INST_ZONE := 6;                       ! (setzone FINE TCP[ORI EAX ORI LEAX REAX])
+    CONST NUM INST_WAITTIME := 7;                   ! WaitTime T
+    CONST NUM INST_TPWRITE := 8;                    ! TPWrite "MSG"
+    CONST NUM INST_TOOL := 9;                       ! (settool X Y Z QW QX QY QZ KG CX CY CZ)
+    CONST NUM INST_NOTOOL := 10;                    ! (settool tool0)
+    CONST NUM INST_SETDO := 11;                     ! SetDO "NAME" ON
+    CONST NUM INST_SETAO := 12;                     ! SetAO "NAME" V
+    CONST NUM INST_EXT_JOINTS_ALL := 13;            ! (setextjoints a1 a2 a3 a4 a5 a6) --> send non-string 9E9 for inactive axes
+    CONST NUM INST_ACCELERATION := 14;              ! WorldAccLim \On V (V = 0 sets \Off, any other value sets WorldAccLim \On V)
+    CONST NUM INST_SING_AREA := 15;                 ! SingArea bool (sets Wrist or Off)
+    CONST NUM INST_EXT_JOINTS_ROBTARGET := 16;      ! (setextjoints a1 a2 a3 a4 a5 a6, applies only to robtarget)
+    CONST NUM INST_EXT_JOINTS_JOINTTARGET := 17;    ! (setextjoints a1 a2 a3 a4 a5 a6, applies only to robtarget)
+    CONST NUM INST_CUSTOM_ACTION := 18;             ! This is a wildcard for custom user functions that do not really fit in the Machina API (mainly Yumi gripping right now)
 
 	!###\   ###\###\    ###\     ######\ ##\	 ##\###\   ##\
 	!####\ ####\ ###\  ###\     ##\\\\##\##\\##\\##\####\  ##\
@@ -99,10 +102,12 @@
 	!##\ \\\ ##\    ###\        \######\ ###\   ###\##\ \####\
 	!\\\     \\\	\\\\         \\\\\\\ \\\\   \\\\\\\  \\\\\
 	
-	CONST num INST_TEST1 := 18;
-	CONST num INST_TEST2 := 19;
-	CONST num INST_MOVETOCOMPLETEL := 20;
-	CONST num INST_MOVETOCOMPLETEJ := 21;
+    CONST NUM INST_TEST1 := 19;
+    CONST NUM INST_TEST2 := 20;
+    CONST NUM INST_MOVETOCOMPLETEL := 21;           ! MoveL X Y Z QW QX QY QZ CF1 CF4 CF6 CFX
+    CONST NUM INST_MOVETOCOMPLETEJ := 22;           ! MoveJ X Y Z QW QX QY QZ CF1 CF4 CF6 CFX
+    CONST NUM INST_MOVETOCOMPLETEC := 23;           ! MoveC X Y Z QW QX QY QZ CF1 CF4 CF6 CFX
+	CONST NUM INST_ABBTOOL := 24;                   ! settool X Y Z QW QX QY QZ KG CX CY CZ
 
     CONST num INST_STOP_EXECUTION := 100;           ! Stops execution of the server module
     CONST num INST_GET_INFO := 101;                 ! A way to retreive state information from the server (not implemented)
@@ -209,8 +214,9 @@
         TPErase;
 
         ! Allow the controller to choose the best configuraation for motion
-        ConfJ \Off;
-        ConfL \Off;
+		! ConfJ and ConfL removed due to complication with MoveToRobTarget
+        ! ConfJ \Off;
+        ! ConfL \Off;
 
         CursorsInitialize;
         ServerInitialize;
@@ -223,6 +229,7 @@
     PROC MainLoop()
         VAR action currentAction;
         VAR bool stopExecution := FALSE;
+		VAR robtarget arrRobTarget{2};
 
         WHILE stopExecution = FALSE DO
             ! Read the incoming buffer stream until flagges complete
@@ -245,6 +252,13 @@
                 CASE INST_MOVEJ:
                     cursorRobTarget := GetRobTarget(currentAction);
                     MoveJ cursorRobTarget, cursorSpeed, cursorZone, cursorTool, \WObj:=cursorWObj;
+				
+				! INST_MoveC is currently not implemented
+				! requires the ablility to send one robtarget and two robtargets while not creating a IndexOutRange exception
+				!CASE INST_MOVEC:
+					! send currentAction to proc and retrieve a array of robTargets
+                    !GetRobTargets currentAction, arrRobTarget;
+					!MoveC arrRobTarget{1}, arrRobTarget{2}, cursorSpeed, cursorZone, cursorTool, \WObj:=cursorWObj;
 
                 CASE INST_MOVEABSJ:
                     cursorJointTarget := GetJointTarget(currentAction);
@@ -348,7 +362,19 @@
 				CASE INST_MOVETOCOMPLETEJ:
 					cursorRobTarget := getRobTargetComplete(currentAction);
 					MoveJ cursorRobTarget, cursorSpeed, cursorZone, cursorTool, \WObj:=cursorWObj;
-					
+
+				CASE INST_MOVETOCOMPLETEC:
+					! if ConfJ and ConfL aren't turned off MoveC will not happen.
+					! this is only tested on 2 instances. More research required.
+					ConfJ \Off;
+					ConfL \Off;
+					! send currentAction to proc and retrieve a array of robTargets
+					GetRobTargets currentAction, arrRobTarget;
+					MoveC arrRobTarget{1}, arrRobTarget{2}, cursorSpeed, cursorZone, cursorTool, \WObj:=cursorWObj;
+					! turn ConfJ and ConfL back on for other actions.
+					ConfJ \On;
+					ConfL \On;
+
                 ENDTEST
 
                 ! Send acknowledgement message
@@ -716,7 +742,7 @@
         VAR num nPos;
         VAR string s;
         VAR num len;
-        VAR num params{11};
+        VAR num params{22};
         VAR num paramsPos := 1;
         VAR action a;
 
@@ -819,6 +845,17 @@
         a.p9 := params{9};
         a.p10 := params{10};
         a.p11 := params{11};
+		a.p12 := params{12};
+        a.p13 := params{13};
+        a.p14 := params{14};
+        a.p15 := params{15};
+        a.p16 := params{16};
+        a.p17 := params{17};
+        a.p18 := params{18};
+        a.p19 := params{19};
+        a.p20 := params{20};
+        a.p21 := params{21};
+        a.p22 := params{22};
 
         ! Save it to the buffer
         StoreAction a;
@@ -841,7 +878,7 @@
         VAR num nPos;
         VAR string s;
         VAR num len;
-        VAR num params{11};
+        VAR num params{22};
         VAR num paramsPos := 1;
         VAR action a;
 
@@ -933,6 +970,17 @@
         a.p9 := params{9};
         a.p10 := params{10};
         a.p11 := params{11};
+		a.p12 := params{12};
+        a.p13 := params{13};
+        a.p14 := params{14};
+        a.p15 := params{15};
+        a.p16 := params{16};
+        a.p17 := params{17};
+        a.p18 := params{18};
+        a.p19 := params{19};
+        a.p20 := params{20};
+        a.p21 := params{21};
+        a.p22 := params{22};
 
         ! Save it to the buffer
         StoreAction a;
@@ -1006,6 +1054,19 @@
 	FUNC robtarget GetRobTargetComplete(action a)
         RETURN [[a.p1, a.p2, a.p3], [a.p4, a.p5, a.p6, a.p7], [a.p8, a.p9, a.p10, a.p11], cursorExtJointsRobTarget];
     ENDFUNC
+    
+    ! returns a array of robtarget to be used for MoveC operations
+	! needs to be a PROC, FUNC cannot return array
+    PROC GetRobTargets(action a, INOUT robtarget rt{*})
+        VAR robtarget rt1;
+        VAR robtarget rt2;
+        
+        rt1 := [[a.p1, a.p2, a.p3], [a.p4, a.p5, a.p6, a.p7], [a.p8, a.p9, a.p10, a.p11], cursorExtJointsRobTarget];
+        rt2 := [[a.p12, a.p13, a.p14], [a.p15, a.p16, a.p17, a.p18], [a.p19, a.p20, a.p21, a.p22], cursorExtJointsRobTarget];
+        
+        rt{1} := rt1;
+        rt{2} := rt2;
+	ENDPROC
 
     ! Return the speeddata represented by an Action
     FUNC speeddata GetSpeedData(action a)

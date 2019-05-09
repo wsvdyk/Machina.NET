@@ -889,7 +889,7 @@ namespace Machina.Drivers.Communication
 
             if (!LoadModuleFromControllerToTask(task, targetName))
             {
-                throw new Exception($"Could not load module {targetName} from controller to task {task.Name}");
+                    throw new Exception($"Could not load module {targetName} from controller to task {task.Name}");
             }
 
             return true;
@@ -1113,7 +1113,9 @@ namespace Machina.Drivers.Communication
                 return null;
             }
 
-            RobTarget rt = controller.MotionSystem.ActiveMechanicalUnit.GetPosition(ABB.Robotics.Controllers.MotionDomain.CoordinateSystemType.World);
+            // cannot be simplified, this RobTarget is outside the solution
+            // there is also a RobTarget inside the solution
+            ABB.Robotics.Controllers.RapidDomain.RobTarget rt = controller.MotionSystem.ActiveMechanicalUnit.GetPosition(ABB.Robotics.Controllers.MotionDomain.CoordinateSystemType.World);
 
             return new Vector(rt.Trans.X, rt.Trans.Y, rt.Trans.Z);
         }
@@ -1130,7 +1132,9 @@ namespace Machina.Drivers.Communication
                 return null;
             }
 
-            RobTarget rt = controller.MotionSystem.ActiveMechanicalUnit.GetPosition(ABB.Robotics.Controllers.MotionDomain.CoordinateSystemType.World);
+            // cannot be simplified, this RobTarget is outside the solution
+            // there is also a RobTarget inside the solution
+            ABB.Robotics.Controllers.RapidDomain.RobTarget rt = controller.MotionSystem.ActiveMechanicalUnit.GetPosition(ABB.Robotics.Controllers.MotionDomain.CoordinateSystemType.World);
 
             // ABB's convention is Q1..Q4 as W..Z
             return Rotation.FromQuaternion(rt.Rot.Q1, rt.Rot.Q2, rt.Rot.Q3, rt.Rot.Q4);
@@ -1170,7 +1174,9 @@ namespace Machina.Drivers.Communication
                 return null;
             }
 
-            RobTarget rt = controller.MotionSystem.ActiveMechanicalUnit.GetPosition(ABB.Robotics.Controllers.MotionDomain.CoordinateSystemType.World);
+            // cannot be simplified, this RobTarget is outside the solution
+            // there is also a RobTarget inside the solution
+            ABB.Robotics.Controllers.RapidDomain.RobTarget rt = controller.MotionSystem.ActiveMechanicalUnit.GetPosition(ABB.Robotics.Controllers.MotionDomain.CoordinateSystemType.World);
 
             return new ExternalAxes(rt.Extax.Eax_a, rt.Extax.Eax_b, rt.Extax.Eax_c, rt.Extax.Eax_d, rt.Extax.Eax_e, rt.Extax.Eax_f);
         }
